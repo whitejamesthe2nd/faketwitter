@@ -3,6 +3,7 @@ const morgan = require("morgan");
 const { environment } = require('./config');
 const indexRouter = require('./routes/index');
 const tweetsRouter = require('./routes/tweets');
+const { check, validationResult } = require('express-validator')
 const app = express();
 
 app.use(morgan("dev"));
@@ -10,9 +11,9 @@ app.use(express.json());
 app.use(indexRouter);
 app.use(tweetsRouter);
 
-app.get("/", (req, res) => {
-  res.send("Welcome to the express-sequelize-starter!");
-});
+// app.get("/", (req, res) => {
+//   res.send("Welcome to the express-sequelize-starter!");
+// });
 
 // Catch unhandled requests and forward to error handler.
 app.use((req, res, next) => {
@@ -30,6 +31,7 @@ app.use((err, req, res, next) => {
   res.json({
     title: err.title || "Server Error",
     message: err.message,
+    errors: err.errors, // Includes our array of validation errors in our JSON response
     stack: isProduction ? null : err.stack,
   });
 });
